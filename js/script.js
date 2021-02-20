@@ -1,10 +1,10 @@
 let startBtn = document.getElementById("start");
-let timerEl = document.getElementById("countdown");
 let titleEl = document.getElementById("title");
 let scoreBtn = document.getElementById("highScore");
 let descriptionEl = document.getElementById("description");
 let answerListItems = document.getElementsByClassName("answer-list-item");
 let feedbackEl = document.getElementById("feedback");
+
 
 let quizQuestions = [
   {
@@ -24,7 +24,7 @@ let quizQuestions = [
   },
   {
     "question": "Array in Javascript can be used to store__________.",
-    "answers": ["numers and strings", "other arrays", "booleans", "all of the above"],
+    "answers": ["numbers and strings", "other arrays", "booleans", "all of the above"],
     "correctAnswer": "all of the above"
   },
   {
@@ -32,48 +32,60 @@ let quizQuestions = [
     "answers": ["commas", "curly brackets", "quotes", "parenthesis"],
     "correctAnswer": "parenthesis"
   },
-
 ];
 
+let timerEl = document.getElementById("countdown");
+let timeInterval;
+let timeLeft = 0;
+let currentQuestionIndex = 0;
+timeLeft < 0 == 0;
+
 function countdown() {
-  let timeLeft = 100;
-  let timeInterval = setInterval(function() {
-    if (timeLeft > 1) {
-      
-      timerEl.textContent = "Time: " + timeLeft ;
-    
-      timeLeft--;
+  timeLeft = 100;
+  timerEl.textContent = "Time: " + timeLeft ;
+
+  timeInterval = setInterval(function() {
+    timerEl.textContent = "Time: " + timeLeft ;
+    timeLeft--;
+    if (timeLeft <= 0 || currentQuestionIndex == quizQuestions.length) {
+      clearInterval(timeInterval);
     } 
   }, 1000);
-
 };
-
-let loadQuestions = function(index) {
-  let questionJson = quizQuestions[index];
+ 
+let loadQuestions = function(questionIndex) {
+  currentQuestionIndex = questionIndex;
+  let questionJson = quizQuestions[currentQuestionIndex];
   let answers = questionJson["answers"];
-  let questions = questionJson["question"];
-
+  let question = questionJson["question"];
+  titleEl.textContent = question;
+  
   for (let i = 0 ; i < answerListItems.length; i++) {
     answerListItems[i].textContent = answers[i];
     answerListItems[i].classList.remove("display-none");
-    titleEl.textContent = questions
-    
-    // add eventlistner
-    answerListItems[i].addEventListener("click", function(event){
-      let currentListItem = event.currentTarget;
-      let answersText = currentListItem.innerText;
-      if (answersText === questionJson["correctAnswer"]) {
-        feedbackEl.textContent = "Correct!"
-      } else {
-        countdown -= 10;
-        feedbackEl.textContent = "Wrong!"
-      }
-      loadQuestions(i);
-    })
   }
 };
 
-
+let setEventListeners = function() {
+  for (let i = 0 ; i < answerListItems.length; i++) {
+    // add eventlistner
+    answerListItems[i].addEventListener("click", function(event){
+      let currentListItem = event.currentTarget;
+      let answersText = currentListItem.textContent;
+      let questionJson = quizQuestions[currentQuestionIndex];
+      if (answersText == questionJson["correctAnswer"]) {
+        feedbackEl.textContent = "Correct!";
+      } else {
+        timeLeft -= 10;
+        if (timeLeft < 0){
+          timeLeft = 0;
+        }
+        feedbackEl.textContent = "Wrong!";
+      }
+      loadQuestions(currentQuestionIndex++);
+    });
+  }
+}
 
 startBtn.addEventListener("click", function(event) {
   event.preventDefault();
@@ -81,6 +93,7 @@ startBtn.addEventListener("click", function(event) {
   titleEl.textContent = "Commonly used data type DO not Include:"
   startBtn.classList.add("display-none"); 
 
+  setEventListeners();
   loadQuestions(0);
 });
 
