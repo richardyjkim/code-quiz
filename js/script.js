@@ -10,6 +10,9 @@ let openingSectionEl = document.getElementById("opening_section");
 let quizlistSectionEl = document.getElementById("quizlist_section");
 let submitSectionEl = document.getElementById("submit_section");
 let scoreSectionEl = document.getElementById("score_section");
+let gobackBtn = document.getElementById("goback_button");
+let clearBtn = document.getElementById("clear_button");
+let first = true;
 
 let quizQuestions = [
   {
@@ -39,6 +42,7 @@ let quizQuestions = [
   },
 ];
 
+// Time Countdown
 let timerEl = document.getElementById("countdown");
 let timeInterval;
 let timeLeft = 0;
@@ -61,15 +65,16 @@ function countdown() {
 // Game Over
 let score = 0;
 function gameOver() {
-  console.log("GAME OVER!!")
   clearInterval(timeInterval);
   let score = timeLeft;
   quizlistSectionEl.classList.add("display-none");
   submitSectionEl.classList.remove("display-none");
+  feedbackEl.classList.add("display-none");
   titleEl.textContent = "Game Over!";
   scoreEl.textContent = score;
 }
  
+// Question Section
 let loadQuestions = function(questionIndex) {
   currentQuestionIndex = questionIndex;
   let questionJson = quizQuestions[currentQuestionIndex];
@@ -83,8 +88,11 @@ let loadQuestions = function(questionIndex) {
   }
 };
 
+// Question Loading loop
 let setEventListeners = function() {
+  currentQuestionIndex = 0;
   for (let i = 0 ; i < answerListItems.length; i++) {
+    console.log("Start of Function:" + i);
     // add eventlistner
     answerListItems[i].addEventListener("click", function(event) {
       let currentListItem = event.currentTarget;
@@ -107,6 +115,7 @@ let setEventListeners = function() {
       feedbackEl.setAttribute("class", "feedback");
       ++currentQuestionIndex;
       if (currentQuestionIndex < quizQuestions.length) {
+        console.log("Load Question:" + currentQuestionIndex);
         loadQuestions(currentQuestionIndex);
       } else {
         gameOver();
@@ -115,12 +124,62 @@ let setEventListeners = function() {
   }
 }
 
+
+// Start button
 startBtn.addEventListener("click", function(event) {
   event.preventDefault();
   openingSectionEl.classList.add("display-none"); 
-
-  setEventListeners();
+  if (first) {
+    setEventListeners();
+  }
   loadQuestions(0);
+  first = false;
 });
 
 startBtn.onclick = countdown;
+
+
+// Submit button
+submitBtn.addEventListener("click", function(event) {
+  event.preventDefault();
+
+  scoreSectionEl.classList.remove("display-none");
+  submitSectionEl.classList.add("display-none");
+  titleEl.textContent = "High scores!";
+  feedbackEl.classList.add("display-none");
+  saveScore();
+});
+
+// save scores
+function saveScore() {
+  let initial = document.getElementById("initial").value;
+  let finalScore = timeLeft.toString();
+  let highscores = JSON.parse(localStorage.getItem("highscores")) || [];
+  let newScore = {
+    scoreKey: finalScore,
+    name: initial
+  };
+
+  highscores.push(newScore);
+  highscores.sort(function(a, b) {
+    return b.scoreKey - a.scoreKey;
+  });
+  localStorage.setItem("highscores", JSON.stringify(highscores));
+  
+  highscores.forEach(function(newScore) {
+    let liEl = document.createElement("li");
+    liEl.textContent = newScore.name + " - " + newScore.scoreKey;
+
+    let olEl = document.getElementById("score_list");
+    olEl.appendChild(liEl);
+  });
+};
+
+function goBack () {
+  scoreSectionEl.classList.add("display-none");
+  openingSectionEl.classList.remove("display-none");
+  titleEl.textContent = "Coding Quiz Challenge";
+  feedbackEl.classList.add("display-none");
+  timerEl.textContent = "Time:"
+};
+gobackBtn.onclick = goBack;
