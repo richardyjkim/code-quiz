@@ -4,7 +4,12 @@ let scoreBtn = document.getElementById("highScore");
 let descriptionEl = document.getElementById("description");
 let answerListItems = document.getElementsByClassName("answer-list-item");
 let feedbackEl = document.getElementById("feedback");
-
+let scoreEl = document.getElementById("score");
+let submitBtn = document.getElementById("submit_button");
+let openingSectionEl = document.getElementById("opening_section");
+let quizlistSectionEl = document.getElementById("quizlist_section");
+let submitSectionEl = document.getElementById("submit_section");
+let scoreSectionEl = document.getElementById("score_section");
 
 let quizQuestions = [
   {
@@ -30,7 +35,7 @@ let quizQuestions = [
   {
     "question": "String values must be enclosed within _________ when being assigned to variables.",
     "answers": ["commas", "curly brackets", "quotes", "parenthesis"],
-    "correctAnswer": "parenthesis"
+    "correctAnswer": "quotes"
   },
 ];
 
@@ -48,10 +53,22 @@ function countdown() {
     timerEl.textContent = "Time: " + timeLeft ;
     timeLeft--;
     if (timeLeft <= 0 || currentQuestionIndex == quizQuestions.length) {
-      clearInterval(timeInterval);
+      gameOver();
     } 
   }, 1000);
 };
+
+// Game Over
+let score = 0;
+function gameOver() {
+  console.log("GAME OVER!!")
+  clearInterval(timeInterval);
+  let score = timeLeft;
+  quizlistSectionEl.classList.add("display-none");
+  submitSectionEl.classList.remove("display-none");
+  titleEl.textContent = "Game Over!";
+  scoreEl.textContent = score;
+}
  
 let loadQuestions = function(questionIndex) {
   currentQuestionIndex = questionIndex;
@@ -59,39 +76,48 @@ let loadQuestions = function(questionIndex) {
   let answers = questionJson["answers"];
   let question = questionJson["question"];
   titleEl.textContent = question;
-  
+  quizlistSectionEl.classList.remove("display-none");
+
   for (let i = 0 ; i < answerListItems.length; i++) {
     answerListItems[i].textContent = answers[i];
-    answerListItems[i].classList.remove("display-none");
   }
 };
 
 let setEventListeners = function() {
   for (let i = 0 ; i < answerListItems.length; i++) {
     // add eventlistner
-    answerListItems[i].addEventListener("click", function(event){
+    answerListItems[i].addEventListener("click", function(event) {
       let currentListItem = event.currentTarget;
       let answersText = currentListItem.textContent;
       let questionJson = quizQuestions[currentQuestionIndex];
       if (answersText == questionJson["correctAnswer"]) {
-        feedbackEl.textContent = "Correct!";
+        feedbackEl.textContent = "Correct~!";
+        feedbackEl.style.color = "Green";
+        feedbackEl.style.fontSize = "300%";
       } else {
         timeLeft -= 10;
         if (timeLeft < 0){
           timeLeft = 0;
         }
-        feedbackEl.textContent = "Wrong!";
+        feedbackEl.textContent = "Wrong!!!!";
+        feedbackEl.style.color = "Red";
+        feedbackEl.style.fontSize = "300%";
       }
-      loadQuestions(currentQuestionIndex++);
+      timerEl.textContent = "Time: " + timeLeft ;
+      feedbackEl.setAttribute("class", "feedback");
+      ++currentQuestionIndex;
+      if (currentQuestionIndex < quizQuestions.length) {
+        loadQuestions(currentQuestionIndex);
+      } else {
+        gameOver();
+      }
     });
   }
 }
 
 startBtn.addEventListener("click", function(event) {
   event.preventDefault();
-  descriptionEl.textContent = "";
-  titleEl.textContent = "Commonly used data type DO not Include:"
-  startBtn.classList.add("display-none"); 
+  openingSectionEl.classList.add("display-none"); 
 
   setEventListeners();
   loadQuestions(0);

@@ -25,7 +25,7 @@ h1 {
 p {
   padding: 0px 100px 50px 100px;
   text-align: center;
-  font-size: 23px;
+  font-size: 30px;
 }
 
 button {
@@ -97,4 +97,21 @@ li {
   padding-top: 10px;
   color: gray;
   border-top: 2px solid rgb(201, 193, 193);
+}
+
+#submit_section {
+  text-align: center;
+  font-size: 30px;
+}
+
+#submit_button {
+  margin: 0;
+  position: relative;
+}
+
+input {
+  font-size: 30px;
+  border-style: solid;
+  border-color: violet;
+  border-width: 5px;
 }

@@ -11,21 +11,39 @@
   <button id="highScore">View High scores</button>
   <div id="countdown">Time:</div>
   <container class= "container">
-  <h1 id="title">Coding Quiz Challenge</h1>
-  <p id="description">Try to answer the following code-related questions within the time limits. 
-    Keep in mind that incorrect answers will penalize your score/time by ten seconds!
-  </p>
-  <button id="start">Let's get it!</button>
 
-  <ol class="onlist">
-    <li class="answer-list-item display-none" ></li>
-    <li class="answer-list-item display-none" ></li>
-    <li class="answer-list-item display-none" ></li>
-    <li class="answer-list-item display-none" ></li>
-  </ol>
+    <h1 id="title">Coding Quiz Challenge</h1>
+    <!-- Starting section -->
+    <div id="opening_section">
+      <p id="description">Try to answer the following code-related questions within the time limits. 
+        Keep in mind that incorrect answers will penalize your score/time by ten seconds!
+      </p>
+      <button id="start">Let's get it!</button>
+    </div>
+    <!-- Quiz Sections -->
+    <div id="quizlist_section" class="display-none">
+      <ol class="onlist">
+        <li class="answer-list-item"></li>
+        <li class="answer-list-item"></li>
+        <li class="answer-list-item"></li>
+        <li class="answer-list-item"></li>
+      </ol>
+    </div>
+    <!-- Submit Sections -->
+    <div id="submit_section" class="display-none">
+      <p>Your final score is <span id="score">1000</span></p>
+      <label>Enter initials:</label>
+      <input type="text" id="initial" placeholder="Your Initial"> 
+      <button id="submit_button">Submit</button>
+    </div>
+    <!-- Score Sections -->
+    <div id="score_section" class="display-none">
+
+    </div>
+
   </container>
 
-  <div id="feedback" class="display-none">""</div>
+  <div id="feedback" class="display-none"></div>
 
   <script src="./js/script.js"></script>
 </body>
