@@ -176,10 +176,17 @@ function saveScore() {
 };
 
 function goBack () {
-  scoreSectionEl.classList.add("display-none");
-  openingSectionEl.classList.remove("display-none");
-  titleEl.textContent = "Coding Quiz Challenge";
-  feedbackEl.classList.add("display-none");
-  timerEl.textContent = "Time:"
+  location.reload();
 };
+
 gobackBtn.onclick = goBack;
+
+// clear button
+clearBtn.addEventListener("click", function(event) {
+  event.preventDefault();
+  let olEl = document.getElementById("score_list")
+  olEl.classList.add("display-none");
+  localStorage.clear();
+});
+
+// view Highscore button
