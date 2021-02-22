@@ -56,7 +56,7 @@ function countdown() {
   timeInterval = setInterval(function() {
     timerSecondSpan.textContent = timeLeft;
     timeLeft--;
-    if (timeLeft <= 0 || currentQuestionIndex == quizQuestions.length) {
+    if (timeLeft < 0 || currentQuestionIndex == quizQuestions.length) {
       gameOver();
     } 
   }, 1000);
@@ -67,6 +67,9 @@ let score = 0;
 function gameOver() {
   clearInterval(timeInterval);
   let score = timeLeft;
+  if (score < 0) {
+    score = 0
+  };
   quizlistSectionEl.classList.add("display-none");
   submitSectionEl.classList.remove("display-none");
   feedbackEl.classList.add("display-none");
@@ -216,12 +219,12 @@ clearBtn.addEventListener("click", function(event) {
 scoreBtn.addEventListener("click", function(event) {
   event.preventDefault();
 
-  scoreSectionEl.classList.remove("display-none");
+  buttonSectionEl.classList.remove("display-none");
   openingSectionEl.classList.add("display-none")
   submitSectionEl.classList.add("display-none");
   titleEl.textContent = "High scores!";
   feedbackEl.classList.add("display-none");
   scoreBtn.classList.add("display-none");
   timerEl.classList.add("display-none");
-  buttonSectionEl.classList.remove("display-none");
+  scoreSectionEl.classList.remove("display-none");
 });
