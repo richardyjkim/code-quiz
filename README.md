@@ -25,7 +25,7 @@ it’s likely that you’ll be asked to complete a coding assessment, perhaps as
 ## Usage 
 
 
-![alt text](.Assets/screenshot/ss1.png)
+![alt text](./Assets/screenshot/ss1.png)
 
 -click "Let's get it" to start your quiz (Red box)
 
@@ -33,30 +33,30 @@ it’s likely that you’ll be asked to complete a coding assessment, perhaps as
 
 -Your initial time will keep countdown as you take the quiz. and remaining time will be your score at the end (Green box)
 
-![alt text](.Assets/screenshot/ss2.png)
+![alt text](./Assets/screenshot/ss2.png)
 
 -Question like this will be asked. Try to get it as much as possible.
 
-!![alt text](.Assets/screenshot/ss3.png)
-![alt text](.Assets/screenshot/ss4.png)
+![alt text](./Assets/screenshot/ss3.png)
+![alt text](./Assets/screenshot/ss4.png)
 
 -And it will tell you if it is right it or wrong
 
 -Be careful if you get it wrong, your time will be deducted by 10 everytime you pick wrong answers
 
-![alt text](.Assets/screenshot/ss5.png)
+![alt text](./Assets/screenshot/ss5.png)
 
 -Once you are done, you can save your score by click subimit button.
 
-!![alt text](.Assets/screenshot/ss6.png)
+!![alt text](./Assets/screenshot/ss6.png)
 
 -Please, dont leave it as an blank, we want you to be remembered.
 
-![alt text](.Assets/screenshot/ss7.png)
+![alt text](./Assets/screenshot/ss7.png)
 
--Once you submit, see yourself where you are. Come back stronger challenger.
+-Once you submit, see yourself where you are. and Come back stronger challenger.
 
-![alt text](.Assets/screenshot/ss7.png)
+![alt text](./Assets/screenshot/ss7.png)
 
 -"Start Over!" to restart game. "Clear High Scores" to delete all the previous scores.
  carefully, your mighty work could be deleted as well.
