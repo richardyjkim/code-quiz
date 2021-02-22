@@ -10,9 +10,11 @@ let openingSectionEl = document.getElementById("opening_section");
 let quizlistSectionEl = document.getElementById("quizlist_section");
 let submitSectionEl = document.getElementById("submit_section");
 let scoreSectionEl = document.getElementById("score_section");
+let buttonSectionEl = document.getElementById("button_section");
 let gobackBtn = document.getElementById("goback_button");
 let clearBtn = document.getElementById("clear_button");
 let first = true;
+let validInput = true;
 
 let quizQuestions = [
   {
@@ -44,17 +46,15 @@ let quizQuestions = [
 
 // Time Countdown
 let timerEl = document.getElementById("countdown");
+let timerSecondSpan = document.getElementById("timer_second");
 let timeInterval;
 let timeLeft = 0;
 let currentQuestionIndex = 0;
-timeLeft < 0 == 0;
 
 function countdown() {
-  timeLeft = 100;
-  timerEl.textContent = "Time: " + timeLeft ;
-
+  timeLeft = 99;
   timeInterval = setInterval(function() {
-    timerEl.textContent = "Time: " + timeLeft ;
+    timerSecondSpan.textContent = timeLeft;
     timeLeft--;
     if (timeLeft <= 0 || currentQuestionIndex == quizQuestions.length) {
       gameOver();
@@ -92,7 +92,6 @@ let loadQuestions = function(questionIndex) {
 let setEventListeners = function() {
   currentQuestionIndex = 0;
   for (let i = 0 ; i < answerListItems.length; i++) {
-    console.log("Start of Function:" + i);
     // add eventlistner
     answerListItems[i].addEventListener("click", function(event) {
       let currentListItem = event.currentTarget;
@@ -101,7 +100,8 @@ let setEventListeners = function() {
       if (answersText == questionJson["correctAnswer"]) {
         feedbackEl.textContent = "Correct~!";
         feedbackEl.style.color = "Green";
-        feedbackEl.style.fontSize = "300%";
+        feedbackEl.style.fontSize = "250%";
+
       } else {
         timeLeft -= 10;
         if (timeLeft < 0){
@@ -109,13 +109,12 @@ let setEventListeners = function() {
         }
         feedbackEl.textContent = "Wrong!!!!";
         feedbackEl.style.color = "Red";
-        feedbackEl.style.fontSize = "300%";
+        feedbackEl.style.fontSize = "250%";
       }
-      timerEl.textContent = "Time: " + timeLeft ;
+      timerSecondSpan.textContent = timeLeft ;
       feedbackEl.setAttribute("class", "feedback");
       ++currentQuestionIndex;
       if (currentQuestionIndex < quizQuestions.length) {
-        console.log("Load Question:" + currentQuestionIndex);
         loadQuestions(currentQuestionIndex);
       } else {
         gameOver();
@@ -124,10 +123,61 @@ let setEventListeners = function() {
   }
 }
 
+// save scores
+function saveScore() {
+  let initial = document.getElementById("initial").value;
+  if(initial !== "") {
+    let finalScore = timeLeft.toString();
+    let highscores = JSON.parse(localStorage.getItem("highscores")) || [];
+    let newScore = {
+      scoreKey: finalScore,
+      name: initial
+    };
+    
+    highscores.push(newScore);
+    highscores.sort(function(a, b) {
+      return b.scoreKey - a.scoreKey;
+    });
+    localStorage.setItem("highscores", JSON.stringify(highscores));
+
+    updateScoreList();
+  } else {
+    validInput = false;
+    alert ("Please Enter Your Initials!");
+  }
+  
+};
+
+function updateScoreList() {
+  let highscores = JSON.parse(localStorage.getItem("highscores")) || [];
+  let olEl = document.getElementById("score_list");
+  olEl.innerHTML = ""
+
+  // Updates score list with scores
+  highscores.forEach(function(newScore) {
+    let liEl = document.createElement("li");
+    liEl.textContent = newScore.name + " - " + newScore.scoreKey;
+    olEl.appendChild(liEl);
+  });
+}
+
+function goBack () {
+  location.reload();
+};
+
+
+// END OF DECLARATION
+
+
+updateScoreList();
 
 // Start button
 startBtn.addEventListener("click", function(event) {
   event.preventDefault();
+
+  countdown();
+
+  scoreBtn.classList.add("display-none");
   openingSectionEl.classList.add("display-none"); 
   if (first) {
     setEventListeners();
@@ -136,50 +186,23 @@ startBtn.addEventListener("click", function(event) {
   first = false;
 });
 
-startBtn.onclick = countdown;
-
+gobackBtn.onclick = goBack;
 
 // Submit button
 submitBtn.addEventListener("click", function(event) {
   event.preventDefault();
-
-  scoreSectionEl.classList.remove("display-none");
-  submitSectionEl.classList.add("display-none");
-  titleEl.textContent = "High scores!";
-  feedbackEl.classList.add("display-none");
+  validInput = true;
   saveScore();
+  if (validInput) {
+    scoreSectionEl.classList.remove("display-none");
+    submitSectionEl.classList.add("display-none");
+    titleEl.textContent = "High scores!";
+    feedbackEl.classList.add("display-none");
+    scoreBtn.classList.add("display-none");
+    timerEl.classList.add("display-none");
+    buttonSectionEl.classList.remove("display-none");
+  }
 });
-
-// save scores
-function saveScore() {
-  let initial = document.getElementById("initial").value;
-  let finalScore = timeLeft.toString();
-  let highscores = JSON.parse(localStorage.getItem("highscores")) || [];
-  let newScore = {
-    scoreKey: finalScore,
-    name: initial
-  };
-
-  highscores.push(newScore);
-  highscores.sort(function(a, b) {
-    return b.scoreKey - a.scoreKey;
-  });
-  localStorage.setItem("highscores", JSON.stringify(highscores));
-  
-  highscores.forEach(function(newScore) {
-    let liEl = document.createElement("li");
-    liEl.textContent = newScore.name + " - " + newScore.scoreKey;
-
-    let olEl = document.getElementById("score_list");
-    olEl.appendChild(liEl);
-  });
-};
-
-function goBack () {
-  location.reload();
-};
-
-gobackBtn.onclick = goBack;
 
 // clear button
 clearBtn.addEventListener("click", function(event) {
@@ -190,3 +213,15 @@ clearBtn.addEventListener("click", function(event) {
 });
 
 // view Highscore button
+scoreBtn.addEventListener("click", function(event) {
+  event.preventDefault();
+
+  scoreSectionEl.classList.remove("display-none");
+  openingSectionEl.classList.add("display-none")
+  submitSectionEl.classList.add("display-none");
+  titleEl.textContent = "High scores!";
+  feedbackEl.classList.add("display-none");
+  scoreBtn.classList.add("display-none");
+  timerEl.classList.add("display-none");
+  buttonSectionEl.classList.remove("display-none");
+});
